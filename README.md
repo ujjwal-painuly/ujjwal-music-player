@@ -2,8 +2,8 @@
 
 EchoTune is Ujjwal's evolving music-player project. The original browser music player is being upgraded in the **same repository** with an API, database-backed accounts and a track catalogue. The existing player, song assets and GitHub Pages demo are retained.
 
-> **Live frontend demo:** https://ayushpainuly1234-ui.github.io/ujjwal-music-player/  
-> **Repository:** https://github.com/ayushpainuly1234-ui/ujjwal-music-player
+> **Source code:** https://github.com/ujjwal-painuly/ujjwal-music-player  
+> **Demo status:** The frontend currently runs locally; the previous GitHub Pages URL is unavailable, and the backend has not yet been deployed.
 
 ## Product direction
 
