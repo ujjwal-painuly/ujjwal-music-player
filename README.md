@@ -154,3 +154,9 @@ Built and maintained by [Ujjwal Painuly](https://github.com/ayushpainuly1234-ui)
 ---
 
 If you find a bug or have an idea, open a GitHub issue.
+
+---
+
+## Maintainer
+
+**Ujjwal Painuly** · [GitHub](https://github.com/ujjwal-painuly) · [LinkedIn](https://www.linkedin.com/in/code-with-ujjwal-83828a352/) · [YouTube — Code With Ujjwal](https://www.youtube.com/@Ujjwalpainuly09)
