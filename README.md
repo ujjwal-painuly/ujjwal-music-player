@@ -91,7 +91,15 @@ The API starts at http://localhost:4000. Check http://localhost:4000/api/v1/heal
 
 From the repository root, open index.html using VS Code Live Server at http://localhost:5500 (or update CLIENT_ORIGIN in the server environment to match your local frontend origin).
 
-The frontend uses http://localhost:4000/api/v1 only when opened from localhost. On GitHub Pages it does not call a visitor's localhost; it displays an account-setup message until `window.ECHOTUNE_API_URL` is set to a deployed API base URL (for example, `https://api.example.com/api/v1`). The backend must also allow the exact frontend origin through `CLIENT_ORIGIN`.
+The frontend uses http://localhost:4000/api/v1 only when opened from localhost. On GitHub Pages it does not call a visitor's localhost; it displays an account-setup message until the API URL is configured. In `index.html`, set the value near the top of the file:
+
+```html
+<script>
+  window.ECHOTUNE_API_URL = "https://your-api.example.com/api/v1";
+</script>
+```
+
+For GitHub Pages, set the API's `CLIENT_ORIGIN` to `https://ujjwal-painuly.github.io` (the origin, without the repository path). Do not place database credentials or JWT secrets in frontend files; only the public API URL belongs there.
 
 ## API reference
 
