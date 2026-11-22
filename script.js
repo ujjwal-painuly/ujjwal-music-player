@@ -398,7 +398,7 @@ updateButtons();
 // ===============================
 const isLocalFrontend = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 const configuredApiUrl = typeof window.ECHOTUNE_API_URL === "string"
-    ? window.ECHOTUNE_API_URL.trim().replace(/\\/+$/, "")
+    ? window.ECHOTUNE_API_URL.trim().replace(/\/+$/, "")
     : "";
 const API_BASE = configuredApiUrl || (isLocalFrontend ? "http://localhost:4000/api/v1" : "");
 const accountApiUnavailableMessage = "Account access is not configured for this public demo yet. Run the EchoTune API locally or set window.ECHOTUNE_API_URL to a deployed API.";
