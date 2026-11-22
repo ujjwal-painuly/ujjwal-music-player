@@ -24,6 +24,7 @@ let currentSong = 0;
 // ===============================
 
 let search = document.getElementById("search");
+let searchButton = document.getElementById("searchBtn");
 let songs = document.getElementsByClassName("songitem");
 
 let nextBtn = document.getElementById("nextBtn");
@@ -178,34 +179,28 @@ function playsong3() {
 // SEARCH
 // ===============================
 
+function filterSongs() {
+    const value = search ? search.value.trim().toLowerCase() : "";
+
+    for (let i = 0; i < songs.length; i++) {
+        const songName = songs[i].innerText.toLowerCase();
+        songs[i].style.display = songName.includes(value) ? "flex" : "none";
+    }
+}
+
 if (search) {
-
-    search.addEventListener("input", function () {
-
-        let value =
-            search.value.toLowerCase();
-
-
-        for (let i = 0; i < songs.length; i++) {
-
-            let songName =
-                songs[i].innerText.toLowerCase();
-
-
-            if (songName.includes(value)) {
-
-                songs[i].style.display = "flex";
-
-            } else {
-
-                songs[i].style.display = "none";
-            }
+    search.addEventListener("input", filterSongs);
+    search.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            filterSongs();
         }
     });
 }
 
+searchButton?.addEventListener("click", filterSongs);
 
-// ===============================
+
 // NEXT SONG
 // ===============================
 
@@ -401,7 +396,12 @@ updateButtons();
 // ===============================
 // ECHOTUNE ACCOUNT / API
 // ===============================
-const API_BASE = window.ECHOTUNE_API_URL || "http://localhost:4000/api/v1";
+const isLocalFrontend = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const configuredApiUrl = typeof window.ECHOTUNE_API_URL === "string"
+    ? window.ECHOTUNE_API_URL.trim().replace(/\\/+$/, "")
+    : "";
+const API_BASE = configuredApiUrl || (isLocalFrontend ? "http://localhost:4000/api/v1" : "");
+const accountApiUnavailableMessage = "Account access is not configured for this public demo yet. Run the EchoTune API locally or set window.ECHOTUNE_API_URL to a deployed API.";
 const authDialog = document.getElementById("authDialog");
 const authForm = document.getElementById("authForm");
 const authTitle = document.getElementById("authTitle");
@@ -428,7 +428,8 @@ function openAuth(mode) {
     authSubmit.textContent = mode === "register" ? "Create account" : "Sign in";
     nameField.hidden = mode !== "register";
     document.getElementById("password").autocomplete = mode === "register" ? "new-password" : "current-password";
-    authError.textContent = "";
+    authError.textContent = API_BASE ? "" : accountApiUnavailableMessage;
+    authSubmit.disabled = !API_BASE;
     authDialog.showModal();
 }
 
@@ -439,6 +440,10 @@ document.getElementById("closeAuth")?.addEventListener("click", () => authDialog
 authForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
     authError.textContent = "";
+    if (!API_BASE) {
+        authError.textContent = accountApiUnavailableMessage;
+        return;
+    }
     authSubmit.disabled = true;
     const payload = {
         email: document.getElementById("email").value.trim(),
@@ -473,8 +478,12 @@ logoutBtn?.addEventListener("click", () => {
     setAuthStatus(null);
 });
 
-const savedUser = sessionStorage.getItem("echotune.user");
-if (savedUser) {
+const savedUser = API_BASE ? sessionStorage.getItem("echotune.user") : null;
+if (!API_BASE) {
+    sessionStorage.removeItem("echotune.accessToken");
+    sessionStorage.removeItem("echotune.user");
+    setAuthStatus(null);
+} else if (savedUser) {
     try { setAuthStatus(JSON.parse(savedUser)); }
     catch { sessionStorage.removeItem("echotune.user"); }
 }
