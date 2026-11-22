@@ -14,7 +14,14 @@ app.use(cors({ origin: env.CLIENT_ORIGIN, credentials: true }));
 app.use(express.json({ limit: "1mb" }));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 200, standardHeaders: "draft-7", legacyHeaders: false }));
 
-app.get("/api/v1/health", (_req, res) => res.json({ status: "ok", service: "echotune-api" }));
+app.get("/api/v1/health", (_req, res) => {
+  const databaseReady = mongoose.connection.readyState === 1;
+  return res.status(databaseReady ? 200 : 503).json({
+    status: databaseReady ? "ok" : "degraded",
+    service: "echotune-api",
+    database: databaseReady ? "connected" : "disconnected"
+  });
+});
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/tracks", trackRouter);
 
