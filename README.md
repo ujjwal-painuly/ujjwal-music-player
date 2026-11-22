@@ -3,7 +3,8 @@
 EchoTune is Ujjwal's evolving music-player project. The original browser music player is being upgraded in the **same repository** with an API, database-backed accounts and a track catalogue. The existing player, song assets and GitHub Pages demo are retained.
 
 > **Source code:** https://github.com/ujjwal-painuly/ujjwal-music-player  
-> **Demo status:** The frontend currently runs locally; the previous GitHub Pages URL is unavailable, and the backend has not yet been deployed.
+> **Live frontend:** https://ujjwal-painuly.github.io/ujjwal-music-player/  
+> **Demo status:** The static player and bundled audio tracks are published on GitHub Pages. The API is not deployed yet, so account actions remain unavailable on the public demo.
 
 ## Product direction
 
@@ -27,8 +28,8 @@ A personal music-streaming experience with a responsive player, searchable music
 - Existing music player with play/pause, next/previous and track progress controls.
 - Search/filter for the local playlist.
 - Responsive layout and project/about sections.
-- Sign-up and sign-in dialog connected to the API.
-- Access token and signed-in display stored for the current browser tab only (sessionStorage).
+- Sign-up and sign-in dialog for the API-backed version. On the public GitHub Pages demo, the dialog explains that account access is not configured until a deployed API URL is supplied.
+- When the API is configured, the access token and signed-in display are stored for the current browser tab only (sessionStorage).
 
 ### Backend API
 - Health-check endpoint.
@@ -90,7 +91,7 @@ The API starts at http://localhost:4000. Check http://localhost:4000/api/v1/heal
 
 From the repository root, open index.html using VS Code Live Server at http://localhost:5500 (or update CLIENT_ORIGIN in the server environment to match your local frontend origin).
 
-The frontend currently calls http://localhost:4000/api/v1. For a deployed frontend, configure the API URL and CORS origin for the deployed backend before enabling account features.
+The frontend uses http://localhost:4000/api/v1 only when opened from localhost. On GitHub Pages it does not call a visitor's localhost; it displays an account-setup message until `window.ECHOTUNE_API_URL` is set to a deployed API base URL (for example, `https://api.example.com/api/v1`). The backend must also allow the exact frontend origin through `CLIENT_ORIGIN`.
 
 ## API reference
 
@@ -143,9 +144,10 @@ This is an **active upgrade**, not a claim that every streaming feature is produ
 - [ ] Load and play database-backed tracks in the existing player.
 - [ ] Add persistent playlists, favourites and listening history.
 - [ ] Add admin-only track management and upload workflow.
-- [ ] Add automated API and frontend tests.
-- [ ] Deploy the API and database, then connect the public demo.
-- [ ] Add CI checks and production monitoring.
+- [ ] Add automated API integration tests and browser-level player tests.
+- [ ] Deploy the API with MongoDB, configure the frontend API URL and CORS origin, then enable public account access.
+- [x] Add CI checks for frontend JavaScript syntax, API TypeScript type-checking and production build.
+- [ ] Add production monitoring and error reporting.
 
 ## Author
 
