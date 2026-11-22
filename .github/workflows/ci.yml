@@ -1,4 +1,4 @@
-name: JavaScript syntax checks
+name: CI
 
 on:
   push:
@@ -7,9 +7,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  syntax:
-    name: Check JavaScript syntax
+  frontend-syntax:
+    name: Frontend JavaScript syntax
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -18,12 +21,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Parse every JavaScript file
         shell: bash
         run: |
-          mapfile -d '' files < <(find . -type f -name '*.js' -not -path './.git/*' -print0)
+          mapfile -d '' files < <(find . -type f -name '*.js' -not -path './.git/*' -not -path './server/node_modules/*' -print0)
           if [ "${#files[@]}" -eq 0 ]; then
             echo "No JavaScript files found."
             exit 1
@@ -32,3 +35,27 @@ jobs:
             echo "Checking $file"
             node --check "$file"
           done
+
+  api-typecheck:
+    name: EchoTune API typecheck and production build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install API dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Type-check API
+        run: npm run typecheck
+
+      - name: Build API
+        run: npm run build
